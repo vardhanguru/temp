@@ -111,3 +111,21 @@ def base_view(request):
         return redirect('home') 
     else:
         return redirect('auth')
+    
+
+@login_required
+def delete_task(request, task_id):
+    task = get_object_or_404(Todo, id=task_id)
+    if request.method=='POST':
+        task.delete()
+    return redirect('home')
+
+
+@login_required
+def toggle_task(request, task_id):
+    task = get_object_or_404(Todo, id=task_id, user=request.user)
+    if request.method == 'POST':
+        task.is_completed = not task.is_completed
+        task.save()
+        return redirect('home')
+    return redirect('home')
